@@ -25,4 +25,8 @@
 int aes_mod_init(void);
 int aes_mod_fini(void);
 
+int sha2_mod_init(void);
+int sha2_mod_fini(void);
+
+
 #endif /* _SYS_CRYPTO_ALGS_H */

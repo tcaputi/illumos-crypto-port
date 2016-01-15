@@ -10,6 +10,7 @@ EXTRA_AFLAGS := -D_ASM
 illumos-crypto-y := module/illumos-crypto.o
 
 illumos-crypto-y += module/api/kcf_cipher.o
+illumos-crypto-y += module/api/kcf_digest.o
 illumos-crypto-y += module/api/kcf_mac.o
 illumos-crypto-y += module/api/kcf_miscapi.o
 illumos-crypto-y += module/api/kcf_ctxops.o
@@ -23,6 +24,7 @@ illumos-crypto-y += module/core/kcf_prov_lib.o
 illumos-crypto-y += module/spi/kcf_spi.o
 
 illumos-crypto-y += module/io/aes.o
+illumos-crypto-y += module/io/sha2_mod.o
 
 illumos-crypto-y += module/os/modhash.o
 illumos-crypto-y += module/os/bitmap_arch.o
@@ -38,6 +40,7 @@ illumos-crypto-y += algs/modes/modes.o
 illumos-crypto-y += algs/aes/aes_impl.o
 illumos-crypto-y += algs/aes/amd64/aeskey.o
 illumos-crypto-y += algs/aes/amd64/aes_amd64.o
+illumos-crypto-y += algs/sha2/sha2.o
 
 ccflags-y := -I$(src)/include
 ccflags-y += -I$(src)/algs/

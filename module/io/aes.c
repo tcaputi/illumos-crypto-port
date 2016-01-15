@@ -57,9 +57,7 @@ static struct modlcrypto modlcrypto = {
 };
 
 static struct modlinkage modlinkage = {
-	MODREV_1,
-	(void *)&modlcrypto,
-	NULL
+	MODREV_1, { (void *)&modlcrypto, NULL }
 };
 
 /*
@@ -179,7 +177,7 @@ static crypto_ctx_ops_t aes_ctx_ops = {
 	aes_free_context
 };
 
-static crypto_ops_t aes_crypto_ops = {
+static crypto_ops_t aes_crypto_ops = {{{{{
 	&aes_control_ops,
 	NULL,
 	&aes_cipher_ops,
@@ -194,9 +192,9 @@ static crypto_ops_t aes_crypto_ops = {
 	NULL,
 	NULL,
 	&aes_ctx_ops
-};
+}}}}};
 
-static crypto_provider_info_t aes_prov_info = {
+static crypto_provider_info_t aes_prov_info = {{{{
 	CRYPTO_SPI_VERSION_1,
 	"AES Software Provider",
 	CRYPTO_SW_PROVIDER,
@@ -205,7 +203,7 @@ static crypto_provider_info_t aes_prov_info = {
 	&aes_crypto_ops,
 	sizeof (aes_mech_info_tab)/sizeof (crypto_mech_info_t),
 	aes_mech_info_tab
-};
+}}}};
 
 static crypto_kcf_provider_handle_t aes_prov_handle = 0;
 
@@ -267,9 +265,16 @@ aes_mod_fini(void)
 	}
 
 	return (mod_remove(&modlinkage));
-	
-	return 0;
 }
+
+/* CURRENTLY UNSUPPORTED */
+/*
+int
+_info(struct modinfo *modinfop)
+{
+	return (mod_info(&modlinkage, modinfop));
+}
+*/
 
 static int
 aes_check_mech_param(crypto_mechanism_t *mechanism, aes_ctx_t **ctx, int kmflag)

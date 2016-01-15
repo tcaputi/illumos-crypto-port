@@ -20,6 +20,7 @@
 	(cd).cd_raw.iov_base = (buf);\
 	(cd).cd_raw.iov_len = (len);
 
+#define SHA_CKSUM_SIZE 32
 
 static int rand_seed = 0;
 	
@@ -35,8 +36,45 @@ int random_get_bytes(uint8_t *ptr, size_t len){
 	return 0;
 }
 
-static void test_crypt(int encrypt, crypto_key_t *key, uint64_t guid, uint8_t *ct_buf){
-	int ret = EINVAL;
+static void __test_digest(uint8_t *buf, uint64_t size){
+	int ret, i;
+	crypto_data_t ddata, digest;
+	crypto_mechanism_t mech;
+	uint8_t out[32] = { 0 };
+
+	mech.cm_type = crypto_mech2id(SUN_CKM_SHA256);
+	mech.cm_param = NULL;
+	mech.cm_param_len = 0;
+
+	ddata.cd_format = CRYPTO_DATA_RAW;
+	ddata.cd_offset = 0;
+	ddata.cd_length = size;
+	ddata.cd_raw.iov_base = (char *)buf;
+	ddata.cd_raw.iov_len = size;
+
+	digest.cd_format = CRYPTO_DATA_RAW;
+	digest.cd_offset = 0;
+	digest.cd_length = SHA_CKSUM_SIZE;
+	digest.cd_raw.iov_base = (char *)out;
+	digest.cd_raw.iov_len = SHA_CKSUM_SIZE;
+
+	ret = crypto_digest(&mech, &ddata, &digest, NULL);
+	printk(KERN_INFO "CRYPTO_DIGEST RETURNED: %d DIGEST = \n", ret);
+	
+	for(i = 0; i < 32; i++){
+		printk(KERN_INFO "%02x", (unsigned char)out[i]);
+	}
+}
+
+static void test_digest(void){
+	uint8_t *str = "Hello world";
+	
+	printk(KERN_DEBUG "--------------- ATTEMPTING DIGEST TEST--------------");
+	__test_digest(str, strlen(str));
+}
+
+static void __test_crypt(int encrypt, crypto_key_t *key, uint64_t guid, uint8_t *ct_buf){
+	int ret;
 	crypto_data_t pt, ct;
 	uchar_t *clear_check = NULL;
 	uint_t clear_check_len, ct_buf_len;
@@ -107,7 +145,30 @@ static void test_crypt(int encrypt, crypto_key_t *key, uint64_t guid, uint8_t *c
 	if(ccmp) kmem_free(ccmp, sizeof(CK_AES_CCM_PARAMS));
 }
 
+static void test_crypt(void){
+	crypto_key_t key;
+	size_t keydatalen = 16;
+	uint64_t guid = 123456;
+	uint8_t ct_buf[100];
+	
+	printk(KERN_DEBUG "------------- ATTEMPTING ENCRYPTION TEST------------");
+	
+	//setup key
+	key.ck_format = CRYPTO_KEY_RAW;
+	key.ck_length = keydatalen * 8;
+	key.ck_data = kmem_alloc(keydatalen, KM_SLEEP);
+	random_get_bytes(key.ck_data, keydatalen);
+	
+	//test
+	__test_crypt(1, &key, guid, ct_buf);
+	__test_crypt(0, &key, guid, ct_buf);
+	
+	//cleanup
+	if(key.ck_data) kmem_free(key.ck_data, keydatalen);
+}
+
 static void __exit illumos_crypto_exit(void){
+	sha2_mod_fini();
 	aes_mod_fini();
 	kcf_sched_destroy();
 	kcf_prov_tab_destroy();
@@ -118,11 +179,6 @@ module_exit(illumos_crypto_exit);
 
 /* roughly equivalent to kcf.c: _init() */
 static int __init illumos_crypto_init(void){
-	crypto_key_t key;
-	size_t keydatalen = 16;
-	uint64_t guid = 123456;
-	uint8_t ct_buf[100];
-	
 	/* initialize the mod hash module */
 	mod_hash_init();
 	
@@ -140,20 +196,11 @@ static int __init illumos_crypto_init(void){
 	
 	/* initialize algorithms */
 	aes_mod_init();
+	sha2_mod_init();
 	
-	//setup key
-	key.ck_format = CRYPTO_KEY_RAW;
-	key.ck_length = keydatalen * 8;
-	key.ck_data = kmem_alloc(keydatalen, KM_SLEEP);
-	random_get_bytes(key.ck_data, keydatalen);
-	
-	//test
-	printk(KERN_DEBUG "------------- ATTEMPTING ENCRYPTION TEST------------");
-	test_crypt(1, &key, guid, ct_buf);
-	test_crypt(0, &key, guid, ct_buf);
-	
-	//cleanup
-	if(key.ck_data) kmem_free(key.ck_data, keydatalen);
+	//run tests
+	test_crypt();
+	test_digest();
 	
 	return 0;
 }

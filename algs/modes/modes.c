@@ -118,7 +118,7 @@ crypto_get_ptrs(crypto_data_t *out, void **iov_or_mp, offset_t *current_offset,
 
 		offset = *current_offset;
 		vec_idx = (uintptr_t)(*iov_or_mp);
-		iov = &uio->uio_iov[vec_idx];
+		iov = (iovec_t *)&uio->uio_iov[vec_idx];
 		p = (uint8_t *)iov->iov_base + offset;
 		*out_data_1 = p;
 
@@ -133,7 +133,7 @@ crypto_get_ptrs(crypto_data_t *out, void **iov_or_mp, offset_t *current_offset,
 			if (vec_idx == uio->uio_iovcnt)
 				return;
 			vec_idx++;
-			iov = &uio->uio_iov[vec_idx];
+			iov = (iovec_t *)&uio->uio_iov[vec_idx];
 			*out_data_2 = (uint8_t *)iov->iov_base;
 			*current_offset = amt - *out_data_1_len;
 		}
