@@ -66,6 +66,7 @@ crypto_mech2id(char *mechname)
 {
 	return (crypto_mech2id_common(mechname, B_TRUE));
 }
+EXPORT_SYMBOL(crypto_mech2id);
 
 /*
  * We walk the notification list and do the callbacks.

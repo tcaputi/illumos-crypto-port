@@ -116,6 +116,7 @@ crypto_create_ctx_template(crypto_mechanism_t *mech, crypto_key_t *key,
 
 	return (error);
 }
+EXPORT_SYMBOL(crypto_create_ctx_template);
 
 /*
  * crypto_destroy_ctx_template()
@@ -147,3 +148,4 @@ crypto_destroy_ctx_template(crypto_ctx_template_t tmpl)
 	kmem_free(ctx_tmpl->ct_prov_tmpl, ctx_tmpl->ct_size);
 	kmem_free(ctx_tmpl, sizeof (kcf_ctx_template_t));
 }
+EXPORT_SYMBOL(crypto_destroy_ctx_template);

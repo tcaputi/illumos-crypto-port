@@ -121,6 +121,7 @@ crypto_mac_prov(crypto_provider_t provider, crypto_session_id_t sid,
 
 	return (rv);
 }
+EXPORT_SYMBOL(crypto_mac_prov);
 
 /*
  * Same as crypto_mac_prov(), but relies on the KCF scheduler to choose
@@ -211,6 +212,7 @@ retry:
 	KCF_PROV_REFRELE(pd);
 	return (error);
 }
+EXPORT_SYMBOL(crypto_mac);
 
 /*
  * Single part operation to compute the MAC corresponding to the specified
@@ -246,6 +248,7 @@ crypto_mac_verify_prov(crypto_provider_t provider, crypto_session_id_t sid,
 
 	return (rv);
 }
+EXPORT_SYMBOL(crypto_mac_verify_prov);
 
 /*
  * Same as crypto_mac_verify_prov(), but relies on the KCF scheduler to choose
@@ -332,7 +335,7 @@ retry:
 	KCF_PROV_REFRELE(pd);
 	return (error);
 }
-
+EXPORT_SYMBOL(crypto_mac_verify);
 
 /*
  * crypto_mac_init_prov()
@@ -427,6 +430,7 @@ crypto_mac_init_prov(crypto_provider_t provider, crypto_session_id_t sid,
 
 	return (rv);
 }
+EXPORT_SYMBOL(crypto_mac_init_prov);
 
 /*
  * Same as crypto_mac_init_prov(), but relies on the KCF scheduler to
@@ -502,6 +506,7 @@ retry:
 	KCF_PROV_REFRELE(pd);
 	return (error);
 }
+EXPORT_SYMBOL(crypto_mac_init);
 
 /*
  * crypto_mac_update()
@@ -551,6 +556,7 @@ crypto_mac_update(crypto_context_t context, crypto_data_t *data,
 
 	return (rv);
 }
+EXPORT_SYMBOL(crypto_mac_update);
 
 /*
  * crypto_mac_final()
@@ -602,6 +608,7 @@ crypto_mac_final(crypto_context_t context, crypto_data_t *mac,
 	KCF_CONTEXT_COND_RELEASE(rv, kcf_ctx);
 	return (rv);
 }
+EXPORT_SYMBOL(crypto_mac_final);
 
 /*
  * See comments for crypto_mac_update() and crypto_mac_final().
@@ -638,3 +645,4 @@ crypto_mac_single(crypto_context_t context, crypto_data_t *data,
 	KCF_CONTEXT_COND_RELEASE(error, kcf_ctx);
 	return (error);
 }
+EXPORT_SYMBOL(crypto_mac_single);

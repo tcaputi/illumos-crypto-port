@@ -220,6 +220,7 @@ done:
 
 	return (error);
 }
+EXPORT_SYMBOL(crypto_cipher_init_prov);
 
 /*
  * Same as crypto_cipher_init_prov(), but relies on the scheduler to pick
@@ -281,6 +282,7 @@ retry:
 	KCF_PROV_REFRELE(pd);
 	return (error);
 }
+EXPORT_SYMBOL(crypto_cipher_init);
 
 /*
  * crypto_encrypt_prov()
@@ -346,6 +348,7 @@ crypto_encrypt_prov(crypto_provider_t provider, crypto_session_id_t sid,
 
 	return (error);
 }
+EXPORT_SYMBOL(crypto_encrypt_prov);
 
 /*
  * Same as crypto_encrypt_prov(), but relies on the scheduler to pick
@@ -422,6 +425,7 @@ retry:
 	KCF_PROV_REFRELE(pd);
 	return (error);
 }
+EXPORT_SYMBOL(crypto_encrypt);
 
 /*
  * crypto_encrypt_init_prov()
@@ -437,6 +441,7 @@ crypto_encrypt_init_prov(crypto_provider_t pd, crypto_session_id_t sid,
 	return (crypto_cipher_init_prov(pd, sid, mech, key, tmpl, ctxp, crq,
 	    CRYPTO_FG_ENCRYPT));
 }
+EXPORT_SYMBOL(crypto_encrypt_init_prov);
 
 /*
  * crypto_encrypt_init()
@@ -451,6 +456,8 @@ crypto_encrypt_init(crypto_mechanism_t *mech, crypto_key_t *key,
 	return (crypto_cipher_init(mech, key, tmpl, ctxp, crq,
 	    CRYPTO_FG_ENCRYPT));
 }
+EXPORT_SYMBOL(crypto_encrypt_init);
+
 
 /*
  * crypto_encrypt_update()
@@ -512,6 +519,7 @@ crypto_encrypt_update(crypto_context_t context, crypto_data_t *plaintext,
 
 	return (error);
 }
+EXPORT_SYMBOL(crypto_encrypt_update);
 
 /*
  * crypto_encrypt_final()
@@ -563,6 +571,7 @@ crypto_encrypt_final(crypto_context_t context, crypto_data_t *ciphertext,
 	KCF_CONTEXT_COND_RELEASE(error, kcf_ctx);
 	return (error);
 }
+EXPORT_SYMBOL(crypto_encrypt_final);
 
 /*
  * crypto_decrypt_prov()
@@ -628,6 +637,7 @@ crypto_decrypt_prov(crypto_provider_t provider, crypto_session_id_t sid,
 
 	return (rv);
 }
+EXPORT_SYMBOL(crypto_decrypt_prov);
 
 /*
  * Same as crypto_decrypt_prov(), but relies on the KCF scheduler to
@@ -705,6 +715,7 @@ retry:
 	KCF_PROV_REFRELE(pd);
 	return (error);
 }
+EXPORT_SYMBOL(crypto_decrypt);
 
 /*
  * crypto_decrypt_init_prov()
@@ -720,6 +731,7 @@ crypto_decrypt_init_prov(crypto_provider_t pd, crypto_session_id_t sid,
 	return (crypto_cipher_init_prov(pd, sid, mech, key, tmpl, ctxp, crq,
 	    CRYPTO_FG_DECRYPT));
 }
+EXPORT_SYMBOL(crypto_decrypt_init_prov);
 
 /*
  * crypto_decrypt_init()
@@ -734,6 +746,7 @@ crypto_decrypt_init(crypto_mechanism_t *mech, crypto_key_t *key,
 	return (crypto_cipher_init(mech, key, tmpl, ctxp, crq,
 	    CRYPTO_FG_DECRYPT));
 }
+EXPORT_SYMBOL(crypto_decrypt_init);
 
 /*
  * crypto_decrypt_update()
@@ -795,6 +808,7 @@ crypto_decrypt_update(crypto_context_t context, crypto_data_t *ciphertext,
 
 	return (error);
 }
+EXPORT_SYMBOL(crypto_decrypt_update);
 
 /*
  * crypto_decrypt_final()
@@ -847,6 +861,7 @@ crypto_decrypt_final(crypto_context_t context, crypto_data_t *plaintext,
 	KCF_CONTEXT_COND_RELEASE(error, kcf_ctx);
 	return (error);
 }
+EXPORT_SYMBOL(crypto_decrypt_final);
 
 /*
  * See comments for crypto_encrypt_update().
@@ -882,6 +897,7 @@ crypto_encrypt_single(crypto_context_t context, crypto_data_t *plaintext,
 	KCF_CONTEXT_COND_RELEASE(error, kcf_ctx);
 	return (error);
 }
+EXPORT_SYMBOL(crypto_encrypt_single);
 
 /*
  * See comments for crypto_decrypt_update().
@@ -917,3 +933,4 @@ crypto_decrypt_single(crypto_context_t context, crypto_data_t *ciphertext,
 	KCF_CONTEXT_COND_RELEASE(error, kcf_ctx);
 	return (error);
 }
+EXPORT_SYMBOL(crypto_decrypt_single);
